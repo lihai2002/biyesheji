@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.OrderImportMapper">
+
+    <insert id="insertOrder" >
+        insert into tb_order (oid,produce_time,order_name,uid,order_money,order_state,pay_time)
+        VALUES (#{oid},#{produceTime},#{orderName},#{uid},#{orderMoney},#{orderState},#{payTime})
+    </insert>
+
+</mapper>

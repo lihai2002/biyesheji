@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.OrderMapper">
+    <resultMap id="Orderaaa" type="com.lihai.biyesheji.domain.Order">
+        <id property="oid" column="oid"></id>
+        <result property="produceTime" column="produce_time"></result>
+        <result property="orderName" column="order_name"></result>
+        <result property="uid" column="uid"></result>
+        <result property="orderMoney" column="order_money"></result>
+        <result property="orderState" column="order_state"></result>
+        <result property="payTime" column="pay_time"></result>
+        <association property="user" javaType="com.lihai.biyesheji.domain.User">
+            <id property="uid" column="cid"></id>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+<!--    查询电费账单-->
+    <select id="findallDian" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '电费'
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+<!--查询欠电费用户账单-->
+    <select id="findallDianNo" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '电费'
+                and a.order_state = "未缴费"
+        </where>
+    </select>
+
+
+    <!--    条件查询水费账单-->
+    <select id="findallWater" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '水费'
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--条件查询欠费水费账单-->
+    <select id="findallWaterNo" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '水费'
+            and a.order_state = "未缴费"
+        </where>
+    </select>
+
+
+
+    <!--    条件查询燃气费账单-->
+    <select id="findallRanQi" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '燃气费'
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--条件查询欠费燃气费账单-->
+    <select id="findallRanQiNo" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '燃气费'
+            and a.order_state = "未缴费"
+        </where>
+    </select>
+
+
+
+    <!--    条件查询物业费账单-->
+    <select id="findallWuYe" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '物管费'
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <!--条件查询欠费物业费账单-->
+    <select id="findallWuYeNo" resultMap="Orderaaa">
+        select a.*,b.name,b.uid cid
+        from tb_order a,tb_user b
+        <where>
+            a.uid = b.uid and a.order_name = '物管费'
+            and a.order_state = "未缴费"
+        </where>
+    </select>
+
+
+    <insert id="insertOrder" >
+        insert into tb_order (oid,produce_time,order_name,uid,order_money,order_state,pay_time)
+        VALUES (#{oid},#{produceTime},#{orderName},#{uid},#{orderMoney},#{orderState},#{payTime})
+    </insert>
+
+    <delete id="deleteOrder" >
+        delete from tb_order where oid = #{oid}
+    </delete>
+
+    <update id="updateOrder" >
+        update tb_order
+        <set>
+            produce_time=#{produceTime},
+            order_name=#{orderName},
+            uid=#{uid},
+            order_money=#{orderMoney},
+            order_state=#{orderState},
+            pay_time=#{payTime}
+        </set>
+        where oid=#{oid}
+    </update>
+
+
+
+
+    <!--App用户查询所有欠费账单，根据id-->
+    <select id="findallAppW" resultType="com.lihai.biyesheji.domain.Order">
+        select *
+        from tb_order
+        <where>
+            uid = #{uid}
+            and order_state = "未缴费"
+        </where>
+    </select>
+
+    <!--App用户查询所有已缴费账单，根据id-->
+    <select id="findallAppY" resultType="com.lihai.biyesheji.domain.Order">
+        select *
+        from tb_order
+        <where>
+            uid = #{uid}
+            and order_state = "已缴费"
+        </where>
+    </select>
+
+
+    <!--App用户查找单个欠费账单，根据id-->
+    <select id="findOneUid" resultType="com.lihai.biyesheji.domain.Order">
+        select *
+        from tb_order
+        <where>
+            uid = #{uid}
+            and oid = #{oid}
+        </where>
+    </select>
+
+</mapper>

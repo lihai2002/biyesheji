@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.ParkingMapper">
+    <resultMap id="Parkingaaa" type="com.lihai.biyesheji.domain.Parking">
+        <id property="pid" column="pid"></id>
+        <result property="parkingId" column="parking_id"></result>
+        <result property="uid" column="uid"></result>
+        <result property="parkingAddr" column="parking_addr"></result>
+        <association property="user" javaType="com.lihai.biyesheji.domain.User">
+            <id property="uid" column="cid"></id>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+    <select id="findall" resultMap="Parkingaaa">
+        select a.pid,a.parking_id,a.uid,a.parking_addr,b.name,b.uid cid
+        from tb_parking a,tb_user b
+        <where>
+            a.uid = b.uid and a.uid
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+
+
+<!--    查询空车位-->
+    <select id="findallKong" resultType="com.lihai.biyesheji.domain.Parking">
+        select *
+        from tb_parking
+        <where>
+                uid is null
+        </where>
+    </select>
+
+    <insert id="insertparking" >
+        insert into tb_parking (pid,parking_id,uid,parking_addr)
+        VALUES (#{pid},#{parkingId},#{uid},#{parkingAddr})
+    </insert>
+
+    <delete id="deleteparking" >
+        delete from tb_parking where pid = #{pid}
+    </delete>
+
+    <update id="updateparking" >
+        update tb_parking
+        <set>
+            parking_id=#{parkingId},
+            uid=#{uid},
+            parking_addr=#{parkingAddr},
+        </set>
+        where pid=#{pid}
+    </update>
+
+
+
+</mapper>

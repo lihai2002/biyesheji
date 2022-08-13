@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.UserMapper">
+    <resultMap id="Useraaa" type="com.lihai.biyesheji.domain.User">
+        <id property="uid" column="uid"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="communityId" column="community_id"></result>
+        <result property="idCard" column="id_card"></result>
+        <result property="userPassword" column="user_password"></result>
+        <result property="name" column="name"></result>
+        <result property="sex" column="sex"></result>
+        <result property="userPhone" column="user_phone"></result>
+        <result property="buildId" column="build_id"></result>
+        <result property="money" column="money"></result>
+        <association property="community" javaType="com.lihai.biyesheji.domain.Community">
+            <id property="communityId" column="cid"></id>
+            <result property="communityName" column="community_name"></result>
+        </association>
+    </resultMap>
+
+    <select id="findall" resultMap="Useraaa">
+        select a.uid,a.user_id,a.community_id,a.id_card,a.user_password,a.name,a.user_phone,a.sex,a.build_id,a.money,b.community_name,b.community_id cid
+        from tb_user a,tb_community b
+        <where>
+             a.community_id = b.community_id
+            <if test="search != null and search != ''">
+                and name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+<!--    根据小区id查询该小区所有用户-->
+    <select id="findallCommunityId" resultMap="Useraaa">
+        select *
+        from tb_user
+        <where>
+            community_id = #{communityId}
+        </where>
+    </select>
+
+
+    <insert id="insertUser">
+        insert into tb_user (user_id,community_id,id_card,user_password,name,sex,user_phone,build_id,money)
+        VALUES (#{userId},#{communityId},#{idCard},#{userPassword},#{name},#{sex},#{userPhone},#{buildId},#{money})
+    </insert>
+
+    <delete id="deleteUser">
+        delete from tb_user where user_id = #{userId}
+    </delete>
+
+    <update id="updateUser">
+        update tb_user
+        <set>
+            user_id=#{userId},
+            community_id=#{communityId},
+            id_card=#{idCard},
+            name=#{name},
+            sex=#{sex},
+            user_phone=#{userPhone},
+            build_id=#{buildId},
+            money=#{money}
+        </set>
+             where uid=#{uid}
+    </update>
+
+
+<!--    通过id查找单个用户-->
+    <select id="findOne" resultType="com.lihai.biyesheji.domain.User">
+        select *
+        from tb_user
+        <where>
+            uid=#{uid}
+        </where>
+    </select>
+    <!--    通过账号查找单个用户-->
+    <select id="findOneUserId" resultType="com.lihai.biyesheji.domain.User">
+        select *
+        from tb_user
+        <where>
+            user_Id=#{userId}
+        </where>
+    </select>
+
+
+    <!--账户充值-->
+    <update id="updateMoney">
+        update tb_user
+        <set>
+            money=#{money}
+        </set>
+        where uid=#{uid}
+    </update>
+
+
+
+<!--    app用户登录-->
+    <select id="login" resultType="com.lihai.biyesheji.domain.User" >
+        select *
+        from tb_user
+        <where>
+            <if test="userPhone != null and userPhone != ''">
+                and user_phone=#{userPhone}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                and user_password=#{userPassword}
+            </if>
+        </where>
+
+    </select>
+
+
+<!--    用户修改密码-->
+    <update id="resetPwd">
+        update tb_user
+        <set>
+            user_password=#{userPassword}
+        </set>
+        where user_phone=#{userPhone}
+    </update>
+
+
+    <update id="updateUserApp">
+        update tb_user
+        <set>
+            id_card=#{idCard},
+            name=#{name},
+            sex=#{sex},
+            user_phone=#{userPhone},
+        </set>
+        where  user_phone=#{userPhone} and id_card=#{idCard}
+    </update>
+
+
+</mapper>

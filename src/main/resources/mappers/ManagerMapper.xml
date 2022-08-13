@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.ManagerMapper">
+    <select id="login" resultType="com.lihai.biyesheji.domain.Manager" >
+        select *
+        from tb_manager
+        <where>
+            <if test="zhangHao != null and zhangHao != ''">
+                and zhang_hao=#{zhangHao}
+            </if>
+            <if test="password != null and password != ''">
+                and password=#{password}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="find" resultType="com.lihai.biyesheji.domain.Manager" >
+        select *
+        from tb_manager
+        <where>
+            manager_id = #{managerId}
+        </where>
+
+    </select>
+
+    <update id="update">
+        update tb_manager
+        <set>
+            zhang_hao=#{zhangHao},
+            password=#{password},
+            manager_name=#{managerName},
+            id_card=#{idCard},
+            sex=#{sex},
+            sex=#{sex},
+        </set>
+        where  manager_id=#{managerId}
+    </update>
+
+</mapper>

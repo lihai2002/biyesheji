@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.RepairMapper">
+    <resultMap id="Repairaaa" type="com.lihai.biyesheji.domain.Repair">
+        <id property="repairId" column="repair_id"></id>
+        <result property="uid" column="uid"></result>
+        <result property="repairMain" column="repair_main"></result>
+        <result property="repairTime" column="repair_time"></result>
+        <result property="repairState" column="repair_state"></result>
+        <result property="repairName" column="repair_name"></result>
+        <result property="repairPhone" column="repair_phone"></result>
+        <result property="repairRemark" column="repair_remark"></result>
+        <result property="money" column="money"></result>
+        <association property="user" javaType="com.lihai.biyesheji.domain.User">
+            <id property="uid" column="cid"></id>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+    <select id="findall" resultMap="Repairaaa">
+        select a.*,b.name,b.uid cid
+        from tb_repair a,tb_user b
+        <where>
+            a.uid = b.uid
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+<!--    app用户增加报修-->
+    <insert id="insertRepair" >
+        insert into tb_repair (repair_id,uid,repair_main,repair_time,repair_state,repair_name,repair_phone,repair_remark,money)
+        VALUES (#{repairId},#{uid},#{repairMain},#{repairTime},#{repairState},#{repairName},#{repairPhone},#{repairRemark},#{money})
+    </insert>
+
+    <delete id="deleteRepair" >
+        delete from tb_repair where repair_id = #{repairId}
+    </delete>
+
+    <update id="updateRepair" >
+        update tb_repair
+        <set>
+            uid=#{uid},
+            repair_main=#{repairMain},
+            repair_time=#{repairTime},
+            repair_state=#{repairState},
+            repair_name=#{repairName},
+            repair_phone=#{repairPhone},
+            repair_remark=#{repairRemark},
+            money=#{money}
+        </set>
+        where repair_id=#{repairId}
+    </update>
+
+
+
+
+
+<!-- App查询未处理的报修记录   -->
+    <select id="findallNo" resultType="com.lihai.biyesheji.domain.Repair">
+        select *
+        from tb_repair
+        <where>
+            uid=#{uid} and (repair_state = "未处理" or repair_state = "处理中")
+        </where>
+    </select>
+
+    <!-- App查询未处理的报修记录   -->
+    <select id="findallYes" resultType="com.lihai.biyesheji.domain.Repair">
+        select *
+        from tb_repair
+        <where>
+            uid=#{uid} and repair_state = "已处理"
+        </where>
+    </select>
+
+    <!-- 根据报修单号查询单个记录   -->
+    <select id="findOne" resultType="com.lihai.biyesheji.domain.Repair">
+        select *
+        from tb_repair
+        <where>
+            repair_id=#{repairId}
+        </where>
+    </select>
+
+
+    <update id="updateRepairApp" >
+        update tb_repair
+        <set>
+            repair_state=#{repairState},
+            repair_remark=#{repairRemark},
+        </set>
+        where repair_id=#{repairId}
+    </update>
+
+</mapper>

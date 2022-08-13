@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.RoomMapper">
+    <resultMap id="Roomaaa" type="com.lihai.biyesheji.domain.Room">
+        <id property="id" column="id"></id>
+        <result property="roomId" column="room_id"></result>
+        <result property="user.uid" column="user_id"></result>
+        <result property="buildId" column="build_id"></result>
+        <result property="area" column="area"></result>
+        <result property="state" column="state"></result>
+        <result property="peopleCount" column="people_count"></result>
+        <association property="user" javaType="com.lihai.biyesheji.domain.User">
+            <id property="uid" column="cid"></id>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+    <select id="findall" resultMap="Roomaaa">
+        select a.id,a.room_id,a.build_id,a.area,a.state,a.people_count,b.name,b.uid cid
+        from tb_room a,tb_user b
+        <where>
+            a.uid = b.uid
+            <if test="search != null and search != ''">
+                and room_id = #{search}
+            </if>
+        </where>
+    </select>
+
+    <select id="findallNo" resultType="com.lihai.biyesheji.domain.Room">
+        select *
+        from tb_room
+        <where>
+            state = "未入住"
+            <if test="search != null and search != ''">
+                and room_id = #{search}
+            </if>
+        </where>
+    </select>
+
+<!--    查询所有房间根据楼栋id和已入住状态-->
+    <select id="findallBuildIdYes" resultType="com.lihai.biyesheji.domain.Room">
+        select *
+        from tb_room
+        <where>
+            build_id = #{buildId} and state = "已入住"
+        </where>
+    </select>
+
+<!--    根据用户id查询房间-->
+    <select id="findOneUid" resultType="com.lihai.biyesheji.domain.Room">
+        select *
+        from tb_room
+        <where>
+            uid = #{uid}
+        </where>
+    </select>
+
+    <!--    根据楼号房间号查询房间-->
+    <select id="findOneBuildIdRoomId" resultType="com.lihai.biyesheji.domain.Room">
+        select *
+        from tb_room
+        <where>
+            build_id = #{buildId} and  room_id = #{roomId}
+        </where>
+    </select>
+
+    <insert id="insertRoom" >
+        insert into tb_room (room_id,uid,build_id,area,state,people_count)
+        VALUES (#{roomId},#{uid},#{buildId},#{area},#{state},#{peopleCount})
+    </insert>
+
+    <delete id="deleteRoom" >
+        delete from tb_room where id = #{id}
+    </delete>
+
+    <update id="updateRoom">
+        update tb_room
+        <set>
+            room_id=#{roomId},
+            uid=#{uid},
+            build_id=#{buildId},
+            area=#{area},
+            state=#{state},
+            people_count=#{peopleCount}
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

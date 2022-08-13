@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.CommunityMapper">
+    <select id="findOneCommunityId" resultType="com.lihai.biyesheji.domain.Community" >
+        select *
+        from tb_community
+        <where>
+            community_id = #{communityId}
+        </where>
+
+    </select>
+
+<!--    查找所有小区-->
+    <select id="findall" resultType="com.lihai.biyesheji.domain.Community" >
+        select *
+        from tb_community
+    </select>
+
+    <!--   更新小区资料-->
+    <update id="update" >
+        update tb_community
+        <set>
+            community_name=#{communityName},
+            community_addr=#{communityAddr},
+            community_area=#{communityArea},
+            building_total=#{buildingTotal},
+            user_total=#{userTotal},
+            developer=#{developer},
+            wuye=#{wuye},
+            state=#{state},
+        </set>
+        where community_id=#{communityId}
+    </update>
+
+    <!--   删除小区-->
+    <delete id="delete">
+        delete from tb_community where community_id = #{communityId}
+    </delete>
+
+</mapper>

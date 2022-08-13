@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.RepairTotalMapper">
+
+    <!--    查询-->
+    <select id="findall" resultType="com.lihai.biyesheji.domain.RepairTotal">
+        select *
+        from tb_repair_total
+        <where>
+            year = #{search}
+        </where>
+    </select>
+
+    <!--    查询-->
+    <select id="findOne" resultType="com.lihai.biyesheji.domain.RepairTotal">
+        select *
+        from tb_repair_total
+        <where>
+            year = #{year} and month =#{month}
+        </where>
+    </select>
+
+    <!--    更新维修次数-->
+    <update id="update" >
+        update tb_repair_total
+        <set>
+            count=#{count}
+        </set>
+        where rtid=#{rtid}
+    </update>
+
+
+
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.TousuMapper">
+    <resultMap id="Tousuaaa" type="com.lihai.biyesheji.domain.Tousu">
+        <id property="tid" column="tid"></id>
+        <result property="uid" column="uid"></result>
+        <result property="tousuName" column="tousu_name"></result>
+        <result property="tousuMain" column="tousu_main"></result>
+        <result property="tousuTime" column="tousu_time"></result>
+        <result property="replyState" column="reply_state"></result>
+        <result property="tousuReply" column="tousu_reply"></result>
+        <result property="replyTime" column="reply_time"></result>
+        <association property="user" javaType="com.lihai.biyesheji.domain.User">
+            <id property="uid" column="cid"></id>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+    <select id="findall" resultMap="Tousuaaa">
+        select a.*,b.name,b.uid cid
+        from tb_tousu a,tb_user b
+        <where>
+            a.uid = b.uid
+            <if test="search != null and search != ''">
+                and b.name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteTousu" >
+        delete from tb_tousu where tid = #{tid}
+    </delete>
+
+    <update id="updateTousu" >
+        update tb_tousu
+        <set>
+            reply_state=#{replyState},
+            tousu_reply=#{tousuReply},
+            reply_time=#{replyTime}
+        </set>
+        where tid=#{tid}
+    </update>
+
+
+
+
+    <!--App用户查询所有已缴费账单，根据id-->
+    <select id="findallApp" resultType="com.lihai.biyesheji.domain.Tousu">
+        select *
+        from tb_tousu
+        <where>
+            uid = #{uid}
+        </where>
+    </select>
+
+
+    <insert id="tousuAdd" >
+        insert into tb_tousu (tid,uid,tousu_name,tousu_main,tousu_time,reply_state,tousu_reply,reply_time)
+        VALUES (#{tid},#{uid},#{tousuName},#{tousuMain},#{tousuTime},#{replyState},#{tousuReply},#{replyTime})
+    </insert>
+
+</mapper>

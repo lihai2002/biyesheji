@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.BuildingMapper">
+    <resultMap id="Buildingaaa" type="com.lihai.biyesheji.domain.Building">
+        <id property="buildId" column="build_id"></id>
+        <result property="managerId" column="manager_id"></result>
+        <result property="roomTotal" column="room_total"></result>
+        <result property="roomYes" column="room_yes"></result>
+        <association property="manager" javaType="com.lihai.biyesheji.domain.Manager">
+            <id property="managerId" column="cid"></id>
+            <result property="managerName" column="manager_name"></result>
+        </association>
+        <association property="community" javaType="com.lihai.biyesheji.domain.Community">
+            <id property="communityId" column="cidd"></id>
+            <result property="communityName" column="community_name"></result>
+        </association>
+    </resultMap>
+    <select id="findall" resultMap="Buildingaaa">
+        select a.build_id,a.manager_id,a.room_total,a.room_yes,b.manager_name,b.manager_id cid,c.community_name,c.community_id cidd
+        from tb_building a,tb_manager b,tb_community c
+        <where>
+            a.manager_id = b.manager_id and a.community_id = c.community_id
+            <if test="search != null and search != ''">
+                and build_id = #{search}
+            </if>
+        </where>
+    </select>
+
+<!--    根据小区id查询所有楼栋-->
+    <select id="findallCommunityId" resultType="com.lihai.biyesheji.domain.Building">
+        select *
+        from tb_building
+        <where>
+            community_id = #{communityId}
+        </where>
+    </select>
+
+<!--    根据id查询楼栋-->
+    <select id="findBuildId" resultType="com.lihai.biyesheji.domain.Building">
+        select *
+        from tb_building
+        <where>
+            build_id = #{buildId}
+        </where>
+    </select>
+
+    <insert id="insertBuilding" >
+        insert into tb_building (build_id,community_id,manager_id,room_total,room_yes)
+        VALUES (#{buildId},#{communityId},#{managerId},#{roomTotal},#{roomYes})
+    </insert>
+
+    <delete id="deleteBuilding" >
+        delete from tb_building where build_id = #{buildId}
+    </delete>
+
+    <update id="updateBuilding" >
+        update tb_building
+        <set>
+            manager_id=#{managerId},
+            room_total=#{roomTotal},
+            room_yes=#{roomYes},
+        </set>
+        where build_id=#{buildId}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.NoticeMapper">
+
+    <select id="findall" resultType="com.lihai.biyesheji.domain.Notice">
+        select *
+        from tb_notice
+        <where>
+            <if test="search != null and search != ''">
+                and notice_name like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertNotice" >
+        insert into tb_notice(notice_id,notice_name,notice_main,notice_time)
+        VALUES (#{noticeId},#{noticeName},#{noticeMain},#{noticeTime})
+    </insert>
+
+    <delete id="deleteNotice" >
+        delete from tb_notice where notice_id = #{noticeId}
+    </delete>
+
+    <update id="updateNotice" >
+        update tb_notice
+        <set>
+            notice_name=#{noticeName},
+            notice_main=#{noticeMain},
+            notice_time=#{noticeTime}
+        </set>
+        where notice_id=#{noticeId}
+    </update>
+
+
+
+
+<!--    app公告全部查询-->
+    <select id="findallApp" resultType="com.lihai.biyesheji.domain.Notice">
+        select *
+        from tb_notice
+    </select>
+
+
+
+</mapper>

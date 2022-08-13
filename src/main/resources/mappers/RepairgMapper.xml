@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lihai.biyesheji.mapper.RepairgMapper">
+    <select id="findall" resultType="com.lihai.biyesheji.domain.Repairg">
+        select *
+        from tb_repairg
+        <where>
+            <if test="search != null and search != ''">
+                and repairg_main like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertRepairg" >
+        insert into tb_repairg (repairg_id,repairg_main,repairg_state,repairg_name,repairg_phone,money,repairg_time)
+        VALUES (#{repairgId},#{repairgMain},#{repairgState},#{repairgName},#{repairgPhone},#{money},#{repairgTime})
+    </insert>
+
+    <delete id="deleteRepairg" >
+        delete from tb_repairg where repairg_id = #{repairgId}
+    </delete>
+
+    <update id="updateRepairg" >
+        update tb_repairg
+        <set>
+            repairg_main=#{repairgMain},
+            repairg_state=#{repairgState},
+            repairg_name=#{repairgName},
+            repairg_phone=#{repairgPhone},
+            money=#{money},
+            repairg_time=#{repairgTime}
+        </set>
+        where repairg_id=#{repairgId}
+    </update>
+
+</mapper>
